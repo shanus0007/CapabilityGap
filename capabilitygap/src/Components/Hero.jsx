@@ -22,6 +22,8 @@ const Hero = () => {
                         background: "radial-gradient(125% 125% at 50% 10%, #fff 40%, #475569 100%)",
                     }}
                 />
+                {/* Gradient blend to smoothly merge into the next white section */}
+                <div className="absolute bottom-0 left-0 w-full h-32 sm:h-40 md:h-56 bg-linear-to-t from-[#ffffff] to-transparent z-0 pointer-events-none" />
 
                 <div className="relative z-10 container mx-auto mt-20 px-4 md:px-20 py-12 lg:py-20">
                     <div className="flex flex-col items-center text-center justify-center max-w-4xl mx-auto space-y-6 md:space-y-8">
