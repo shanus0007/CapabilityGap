@@ -20,7 +20,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Large Green CTA Box (Exact from Image) */}
-        <div className="bg-[#b2b0e3] rounded-[2rem] p-10 md:p-16 text-center text-white shadow-2xl shadow-[#1EB952]/20 mb-20 relative overflow-hidden">
+        <div className="bg-[#b2b0e3] rounded-4xl p-10 md:p-16 text-center text-white shadow-2xl shadow-[#1EB952]/20 mb-20 relative overflow-hidden">
 
           {/* Subtle floating box decorations to match the image's squares */}
           <div className="absolute top-10 left-[20%] w-16 h-16 bg-white/10 rounded-md"></div>
@@ -29,7 +29,7 @@ const Footer = () => {
           <div className="absolute bottom-16 right-[15%] w-20 h-20 bg-white/10 rounded-xl"></div>
           <div className="absolute bottom-6 left-[35%] w-20 h-10 bg-white/5 rounded-md"></div>
           <div className="absolute top-1/2 right-[20%] w-32 h-16 bg-white/5 rounded-lg"></div>
-          <div className="absolute -bottom-8 right-[40%] w-24 h-24 bg-white/10 rounded-[2rem] rotate-12"></div>
+          <div className="absolute -bottom-8 right-[40%] w-24 h-24 bg-white/10 rounded-4xl rotate-12"></div>
 
           <div className="relative z-10 flex flex-col items-center">
             {/* Logo box */}
@@ -66,7 +66,7 @@ const Footer = () => {
               Systematic growth for ambitious businesses.
             </p>
 
-            <form className="flex items-center bg-slate-50 border border-slate-200 rounded-full p-1.5 shadow-sm max-w-[22rem]" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex items-center bg-slate-50 border border-slate-200 rounded-full p-1.5 shadow-sm max-w-88" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
                 required
