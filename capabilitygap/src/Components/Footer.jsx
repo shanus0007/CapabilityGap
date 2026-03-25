@@ -134,7 +134,7 @@ const Footer = () => {
         {/* Bottom Bar: Copyright & Policy Links */}
         <div className="pt-8 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4 px-4">
           <p className="text-slate-500 text-sm font-medium">
-            © 2024 AllboundPro. All rights reserved.
+            © 2024 CapabilityGap. All rights reserved.
           </p>
           <div className="flex flex-wrap items-center gap-6 mt-4 md:mt-0">
             <Link to="#" className="text-slate-500 hover:text-[#1EB952] text-sm font-medium transition-colors">Privacy Policy</Link>
