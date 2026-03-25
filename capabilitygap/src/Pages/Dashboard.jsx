@@ -6,8 +6,7 @@ import {
     MapPin, BarChart3, Settings, ShieldAlert
 } from 'lucide-react';
 import { 
-    Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
-    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip
+    Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer
 } from 'recharts';
 
 // Data for Radar Chart
@@ -18,14 +17,6 @@ const radarData = [
     { subject: 'Algorithms', A: 45, fullMark: 100 },
 ];
 
-// Data for Area Chart
-const areaData = [
-    { name: 'Apr 13', score: 52 },
-    { name: 'Apr 14', score: 60 },
-    { name: 'Apr 15', score: 68 },
-    { name: 'Apr 16', score: 65 },
-    { name: 'Apr 19', score: 78 },
-];
 
 // Simple SVG Half Donut Component for metrics
 const HalfDonut = ({ percentage, colorClass, gradientId, strokeWidth = 12, size = 120 }) => {
@@ -365,43 +356,28 @@ export default function Dashboard({ session }) {
                             </div>
                         </div>
 
-                        {/* Performance Analytics */}
-                        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col">
-                            <h3 className="text-lg font-bold text-slate-800 mb-6">Performance Analytics</h3>
-                            <div className="flex-1 w-full relative min-h-[200px]">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={areaData} margin={{ top: 20, right: 30, left: -20, bottom: 0 }}>
-                                        <defs>
-                                            <linearGradient id="colorScore" x1="0" y1="0" x2="1" y2="0">
-                                                <stop offset="0%" stopColor="#818cf8" stopOpacity={0.4}/>
-                                                <stop offset="100%" stopColor="#f472b6" stopOpacity={0.4}/>
-                                            </linearGradient>
-                                            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                                                <stop offset="0%" stopColor="#818cf8" />
-                                                <stop offset="100%" stopColor="#c084fc" />
-                                            </linearGradient>
-                                        </defs>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} dy={10} />
-                                        <YAxis axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 11, fontWeight: 600 }} domain={[40, 100]} ticks={[50, 80, 100]} />
-                                        <Tooltip 
-                                            contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', fontWeight: 600, fontSize: '12px' }}
-                                        />
-                                        <Area 
-                                            type="monotone" 
-                                            dataKey="score" 
-                                            stroke="url(#lineGrad)" 
-                                            strokeWidth={3}
-                                            fillOpacity={1} 
-                                            fill="url(#colorScore)" 
-                                            activeDot={{ r: 6, fill: '#c084fc', stroke: 'white', strokeWidth: 2 }}
-                                        />
-                                    </AreaChart>
-                                </ResponsiveContainer>
-                                
-                                {/* 78% Custom tooltip overlay for the image's specific visual */}
-                                <div className="absolute right-[8%] top-[10%] bg-indigo-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md transform shadow-indigo-500/30">
-                                    78%
+                        {/* Authentic User Details (Replaces Line Graph) */}
+                        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 flex flex-col justify-center">
+                            <h3 className="text-lg font-bold text-slate-800 mb-6">Account Details</h3>
+                            
+                            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100">
+                                <div className="w-16 h-16 bg-linear-to-br from-indigo-50 to-purple-50 rounded-2xl flex items-center justify-center border border-indigo-100">
+                                    <User size={32} className="text-indigo-500" />
+                                </div>
+                                <div>
+                                    <h4 className="text-xl font-bold text-slate-800">{name}</h4>
+                                    <p className="text-sm font-medium text-slate-500">Authenticated Member</p>
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100/60">
+                                    <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Email Address</p>
+                                    <p className="text-sm font-bold text-slate-700">{user.email}</p>
+                                </div>
+                                <div className="bg-slate-50/50 rounded-2xl p-4 border border-slate-100/60 break-words">
+                                    <p className="text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">User ID</p>
+                                    <p className="font-mono text-xs text-slate-500">{user.id}</p>
                                 </div>
                             </div>
                         </div>
