@@ -203,7 +203,7 @@ export default function Dashboard({ session }) {
     ];
 
     return (
-        <div className="min-h-screen bg-[#F8FAFC] flex font-sans text-slate-800">
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-slate-800">
             {/* ---------------- SIDEBAR ---------------- */}
             <Sidebar />
 
