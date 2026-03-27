@@ -7,6 +7,7 @@ import {
     MapPin, BarChart3, Settings, ShieldAlert, Trees
 } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, AreaChart, Area } from 'recharts';
+import Sidebar from '../components/Sidebar';
 
 // Simple SVG Half Donut Component for metrics
 const HalfDonut = ({ percentage, colorClass, gradientId, strokeWidth = 12, size = 120 }) => {
@@ -204,47 +205,7 @@ export default function Dashboard({ session }) {
     return (
         <div className="min-h-screen bg-[#F8FAFC] flex font-sans text-slate-800">
             {/* ---------------- SIDEBAR ---------------- */}
-            <aside className="w-64 bg-white border-r border-slate-100 hidden md:flex flex-col justify-between shrink-0">
-                <div>
-                    <div className="p-6 flex items-center gap-2 cursor-pointer no-underline" onClick={() => navigate('/')}>
-                        <div className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center shrink-0">
-                            <Trees size={20} fill="white" />
-                        </div>
-                        <span className="font-bold text-xl tracking-tighter text-slate-900">CapabilityGap</span>
-                    </div>
-
-                    <div className="px-4 py-4 space-y-1 text-sm font-medium">
-                        <a href="#" className="flex items-center gap-3 px-4 py-3 bg-indigo-50/50 text-indigo-600 rounded-2xl relative">
-                            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-indigo-500 rounded-r-full"></div>
-                            <LayoutDashboard size={18} />
-                            Dashboard
-                        </a>
-                        <button onClick={() => navigate('/assessment')} className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl transition-colors">
-                            <CheckSquare size={18} />
-                            Take Assessment
-                        </button>
-                        <a href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl transition-colors">
-                            <BarChart3 size={18} />
-                            Skill Analysis
-                        </a>
-                        <button onClick={() => navigate('/roadmap')} className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl transition-colors">
-                            <MapPin size={18} />
-                            Learning Roadmap
-                        </button>
-                        <a href="#" className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 hover:text-slate-900 rounded-2xl transition-colors">
-                            <Target size={18} />
-                            Performance Analytics
-                        </a>
-                    </div>
-                </div>
-
-                <div className="px-4 pb-6 space-y-1 text-sm font-medium">
-                    <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-colors">
-                        <LogOut size={18} />
-                        Logout
-                    </button>
-                </div>
-            </aside>
+            <Sidebar />
 
             {/* ---------------- MAIN CONTENT ---------------- */}
             <main className="flex-1 flex flex-col h-screen overflow-hidden">

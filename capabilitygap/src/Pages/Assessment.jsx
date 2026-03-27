@@ -5,6 +5,7 @@ import { calculateCapabilityScores } from '../utils/scoreCalculator';
 import { analyzeSkillGaps } from '../utils/gapAnalyzer';
 import { generateRoleAssessment } from '../utils/aiQuestionGenerator';
 import { ChevronLeft, ChevronRight, CheckCircle2, Clock, AlertCircle, Sparkles, BrainCircuit, Trees } from 'lucide-react';
+import Sidebar from '../components/Sidebar';
 
 const Assessment = ({ session }) => {
   const [questions, setQuestions] = useState([]);
@@ -204,8 +205,19 @@ const Assessment = ({ session }) => {
   };
 
   // Modern Clean EdTech UI Classes
-  const wrapCls = "min-h-screen bg-slate-50 text-slate-800 flex flex-col items-center justify-center p-4 sm:p-8 font-sans transition-colors duration-500";
+  const wrapCls = "w-full flex flex-col items-center justify-center max-w-5xl mx-auto";
   const cardLightCls = "bg-white rounded-4xl p-8 sm:p-12 w-full max-w-4xl shadow-xl shadow-slate-200/50 border border-slate-100 relative";
+
+  const AppShell = ({ children }) => (
+    <div className="min-h-screen bg-[#F8FAFC] flex font-sans text-slate-800">
+        <Sidebar />
+        <main className="flex-1 flex flex-col h-screen overflow-hidden">
+             <div className="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center justify-center bg-slate-50 transition-colors duration-500">
+                  {children}
+             </div>
+        </main>
+    </div>
+  );
   const btnPrimary = "bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 px-8 rounded-2xl text-base font-semibold transition-all duration-300 shadow-lg shadow-indigo-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2";
   const btnSecondary = "bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 py-3.5 px-8 rounded-2xl text-base font-semibold transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
@@ -213,6 +225,7 @@ const Assessment = ({ session }) => {
 
   if (status === 'role_select') {
     return (
+      <AppShell>
       <div className={wrapCls}>
         <div className={`${cardLightCls} text-center flex flex-col items-center`}>
           <div className="w-20 h-20 bg-black text-white rounded-full flex items-center justify-center shadow-xl shadow-black/20 mb-6">
@@ -236,14 +249,16 @@ const Assessment = ({ session }) => {
                <Sparkles size={20} /> Generate AI Assessment 
              </button>
           </div>
-          <p className="text-slate-400 text-xs mt-6">Powered by Google Gemini 2.5 Flash</p>
+            <p className="text-slate-400 text-xs mt-6">Powered by Google Gemini 2.5 Flash</p>
         </div>
       </div>
+      </AppShell>
     );
   }
 
   if (status === 'generating_ai' || status === 'submitting' || status === 'loading') {
     return (
+      <AppShell>
       <div className={wrapCls}>
         <div className="flex flex-col items-center justify-center space-y-6">
           <div className="relative w-20 h-20">
@@ -257,11 +272,13 @@ const Assessment = ({ session }) => {
           {status === 'generating_ai' && <p className="text-slate-400 font-medium">Dynamically constructing skill thresholds via Google Gemini API...</p>}
         </div>
       </div>
+      </AppShell>
     );
   }
 
   if (status === 'missing_data') {
     return (
+      <AppShell>
       <div className={wrapCls}>
         <div className={`${cardLightCls} text-center flex flex-col items-center`}>
           <AlertCircle size={48} className="text-amber-400 mb-6" />
@@ -271,11 +288,13 @@ const Assessment = ({ session }) => {
           <button className={btnPrimary} onClick={() => setStatus('role_select')}><ChevronLeft size={18} /> Retry Generation Target</button>
         </div>
       </div>
+      </AppShell>
     );
   }
 
   if (status === 'ready') {
     return (
+      <AppShell>
       <div className={wrapCls}>
         <div className={`${cardLightCls} text-center flex flex-col items-center`}>
           <div className="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mb-6">
@@ -293,12 +312,14 @@ const Assessment = ({ session }) => {
           </button>
         </div>
       </div>
+      </AppShell>
     );
   }
 
   if (status === 'finished') {
     const score = results.filter(r => r.correct).length;
     return (
+      <AppShell>
       <div className={wrapCls}>
         <div className={`${cardLightCls} text-center max-w-3xl`}>
           <div className="inline-block bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-sm font-bold tracking-widest uppercase mb-4">
@@ -336,6 +357,7 @@ const Assessment = ({ session }) => {
           </div>
         </div>
       </div>
+      </AppShell>
     );
   }
 
@@ -345,6 +367,7 @@ const Assessment = ({ session }) => {
   const progressPercent = ((currentIndex + 1) / questions.length) * 100;
 
   return (
+    <AppShell>
     <div className={wrapCls}>
       {/* Master Progress Header */}
       <div className="w-full max-w-4xl mb-6 px-2 flex justify-between items-end">
@@ -464,6 +487,7 @@ const Assessment = ({ session }) => {
         </div>
       </div>
     </div>
+    </AppShell>
   );
 };
 
