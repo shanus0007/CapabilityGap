@@ -309,10 +309,17 @@ export default function Dashboard({ session }) {
                                 
                                 <div className="h-64 w-full">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData.length > 0 ? radarData : [{subject: 'No Data', A: 0, fullMark: 100}]}>
-                                            <PolarGrid stroke="#f1f5f9" />
-                                            <PolarAngleAxis dataKey="subject" tick={{ fill: '#64748b', fontSize: 12, fontWeight: 600 }} />
+                                        <RadarChart cx="50%" cy="50%" outerRadius="80%" data={radarData.length > 0 ? radarData : [{subject: 'No Data', A: 0, fullMark: 100}]}>
+                                            <PolarGrid stroke="#e2e8f0" strokeDasharray="3 3" />
+                                            <PolarAngleAxis dataKey="subject" tick={false} />
                                             <Radar name="Score" dataKey="A" stroke="#8b5cf6" strokeWidth={2} fill="url(#colorUv)" fillOpacity={0.6} />
+                                            <RechartsTooltip 
+                                                cursor={{ fill: 'rgba(241, 245, 249, 0.4)' }}
+                                                contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', padding: '12px' }}
+                                                itemStyle={{ fontWeight: 700, color: '#8b5cf6' }}
+                                                labelStyle={{ fontWeight: 600, color: '#64748b', marginBottom: '4px' }}
+                                                formatter={(value) => [`${value}% Capability`, 'Match']}
+                                            />
                                             <defs>
                                                 <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
                                                     <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.8}/>
@@ -346,8 +353,8 @@ export default function Dashboard({ session }) {
                                     <h4 className="text-sm font-semibold text-slate-500 mb-2">Strongest Skill</h4>
                                     <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="text-xl font-bold text-slate-800 capitalize leading-tight mb-1 truncate max-w-[120px]">{strongestSkill?.skills?.skill_name || 'N/A'}</p>
-                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-rose-50 text-rose-500 uppercase">Weak 4%</span>
+                                            <p className="text-[17px] font-bold text-slate-800 capitalize leading-tight mb-1.5 pr-2 wrap-break-word line-clamp-2">{strongestSkill?.skills?.skill_name || 'N/A'}</p>
+                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600 uppercase tracking-widest border border-emerald-100/50">Top Tier</span>
                                         </div>
                                         <div className="w-10 h-10 bg-teal-100 text-teal-600 font-bold rounded-xl flex items-center justify-center text-sm">
                                             {strongestSkill?.capability_score || 0}
