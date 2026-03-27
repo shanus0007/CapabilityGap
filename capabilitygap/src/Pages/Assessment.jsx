@@ -7,6 +7,25 @@ import { generateRoleAssessment } from '../utils/aiQuestionGenerator';
 import { ChevronLeft, ChevronRight, CheckCircle2, Clock, AlertCircle, Sparkles, BrainCircuit, Trees } from 'lucide-react';
 import Sidebar from '../Components/Sidebar';
 
+// Modern Clean EdTech UI Classes
+const wrapCls = "w-full flex flex-col items-center justify-start max-w-5xl mx-auto pt-6 pb-20";
+const cardLightCls = "bg-white rounded-4xl p-8 sm:p-12 w-full max-w-4xl shadow-xl shadow-slate-200/50 border border-slate-100 relative";
+
+// Stable Application UI Container extracted outside assessment render queue!
+const AppShell = ({ children, session }) => (
+    <div className="h-[100dvh] w-full bg-[#f8fafc] flex flex-col md:flex-row font-sans text-slate-800 overflow-hidden">
+        <Sidebar session={session} />
+        <main className="flex-1 overflow-hidden relative bg-slate-50">
+             <div className="absolute inset-0 overflow-y-auto p-4 sm:p-6 md:p-8 flex flex-col items-center justify-start transition-colors duration-500">
+                  {children}
+             </div>
+        </main>
+    </div>
+);
+
+const btnPrimary = "bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 px-8 rounded-2xl text-base font-semibold transition-all duration-300 shadow-lg shadow-indigo-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2";
+const btnSecondary = "bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 py-3.5 px-8 rounded-2xl text-base font-semibold transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed";
+
 const Assessment = ({ session }) => {
   const [questions, setQuestions] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -204,52 +223,100 @@ const Assessment = ({ session }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Modern Clean EdTech UI Classes
-  const wrapCls = "w-full flex flex-col items-center justify-center max-w-5xl mx-auto";
-  const cardLightCls = "bg-white rounded-4xl p-8 sm:p-12 w-full max-w-4xl shadow-xl shadow-slate-200/50 border border-slate-100 relative";
-
-  const AppShell = ({ children }) => (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-slate-800">
-        <Sidebar session={session} />
-        <main className="flex-1 flex flex-col h-screen overflow-hidden">
-             <div className="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center justify-center bg-slate-50 transition-colors duration-500">
-                  {children}
-             </div>
-        </main>
-    </div>
-  );
-  const btnPrimary = "bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 px-8 rounded-2xl text-base font-semibold transition-all duration-300 shadow-lg shadow-indigo-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2";
-  const btnSecondary = "bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 py-3.5 px-8 rounded-2xl text-base font-semibold transition-all duration-300 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed";
-
   // ----------- STATE ROUTING SCREENS ----------- 
 
   if (status === 'role_select') {
     return (
-      <AppShell>
+      <AppShell session={session}>
       <div className={wrapCls}>
-        <div className={`${cardLightCls} text-center flex flex-col items-center`}>
-          <div className="w-20 h-20 bg-black text-white rounded-full flex items-center justify-center shadow-xl shadow-black/20 mb-6">
-            <Trees size={40} fill="white" />
+        <div className="bg-white rounded-[32px] p-8 sm:p-14 w-full max-w-5xl shadow-[0_4px_24px_rgba(0,0,0,0.02)] border border-slate-100 flex flex-col items-center">
+          
+          <div className="w-[72px] h-[72px] bg-[#0a0f1c] text-white rounded-full flex items-center justify-center shadow-lg shadow-black/10 mb-8 mx-auto">
+            <Trees size={36} fill="white" />
           </div>
-          <h1 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">CapabilityGap AI</h1>
-          <p className="text-slate-500 text-lg mb-10 max-w-xl">
-            Type any specific job title. Our AI Engine will dynamically generate explicit capability matrices, core skill benchmarks, and bespoke assessment sequences just for you in seconds.
+          
+          <h1 className="text-[28px] sm:text-[32px] font-bold text-[#1e293b] mb-4 text-center tracking-tight">Generate Your AI Skill Assessment</h1>
+          
+          <p className="text-slate-500 text-[15.5px] mb-12 max-w-[700px] text-center leading-relaxed font-medium px-4">
+            Enter your target role, and our AI will generate a personalized skill assessment, capability benchmarks, and a tailored evaluation designed specifically for your career goal.
           </p>
           
-          <div className="w-full max-w-sm flex flex-col items-center gap-4">
-             <input
-                type="text"
-                placeholder="e.g. SDE, Frontend, UI/UX Designer..."
-                className="w-full bg-slate-50 border-2 border-slate-200 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 rounded-2xl px-6 py-4 text-center font-bold text-lg outline-none transition-all shadow-inner"
-                value={targetRoleInput}
-                onChange={(e) => setTargetRoleInput(e.target.value)}
-                onKeyDown={(e) => { if(e.key === 'Enter') handleBeginTargeting() }}
-             />
-             <button className={`${btnPrimary} w-full justify-center text-lg py-4 mt-2 bg-linear-to-r from-indigo-500 to-purple-600 hover:to-purple-700 shadow-indigo-500/25 border-t border-white/20`} onClick={handleBeginTargeting} disabled={!targetRoleInput.trim()}>
-               <Sparkles size={20} /> Generate AI Assessment 
+          <div className="w-full max-w-[540px] flex flex-col items-center">
+             
+             <div className="w-full relative mb-5">
+                <label className="absolute top-2.5 left-4 text-[13px] font-semibold text-slate-400">Target Role</label>
+                <input
+                  type="text"
+                  placeholder="Enter target role (e.g. Software Engineer, Frontend Developer, UI/UX Designer)"
+                  className="w-full bg-white border border-slate-200 focus:border-indigo-400 focus:ring-[3px] focus:ring-indigo-400/20 rounded-[14px] px-4 pt-[30px] pb-3 text-[15.5px] font-semibold text-slate-800 outline-none transition-all shadow-sm placeholder:text-slate-400 placeholder:font-medium"
+                  value={targetRoleInput}
+                  onChange={(e) => setTargetRoleInput(e.target.value)}
+                  onKeyDown={(e) => { if(e.key === 'Enter') handleBeginTargeting() }}
+                />
+             </div>
+
+             <button 
+               className="w-full flex items-center justify-center gap-2 text-white font-bold text-[16.5px] py-[18px] rounded-[14px] transition-all bg-linear-to-r from-[#8b75f9] to-[#ae5df8] hover:shadow-[0_4px_16px_rgba(139,117,249,0.35)] disabled:opacity-50 disabled:cursor-not-allowed transform hover:-translate-y-[1px]" 
+               onClick={handleBeginTargeting} 
+               disabled={!targetRoleInput.trim()}
+             >
+               <Sparkles size={20} className="text-white shrink-0" /> Generate My Assessment 
              </button>
+
+             <div className="flex flex-wrap justify-center items-center gap-2.5 mt-6">
+                <span className="bg-[#f8fafc] text-[#64748b] px-4 py-1.5 rounded-full text-[13px] font-semibold border border-slate-200 flex items-center gap-1.5 shadow-sm">
+                   <span className="text-slate-400 text-[10px]">▼</span> AI Powered
+                </span>
+                <span className="bg-[#f8fafc] text-[#64748b] px-4 py-1.5 rounded-full text-[13px] font-semibold border border-slate-200 shadow-sm">
+                   Role-Based
+                </span>
+                <span className="bg-[#f8fafc] text-[#64748b] px-4 py-1.5 rounded-full text-[13px] font-semibold border border-slate-200 shadow-sm">
+                   Personalized
+                </span>
+             </div>
           </div>
-            <p className="text-slate-400 text-xs mt-6">Powered by Google Gemini 2.5 Flash</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-[60px] w-full max-w-[850px]">
+            {/* Card 1 */}
+            <div className="bg-white border border-slate-100 rounded-[20px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.03)] hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-3">
+                    <Sparkles className="text-[#a855f7]" size={22} fill="#e9d5ff" />
+                    <h3 className="text-[15px] font-bold text-[#1e293b]">AI-Generated Questions</h3>
+                </div>
+                <p className="text-[14px] text-slate-500 leading-relaxed font-medium">Questions are generated based on your target role and required skills.</p>
+            </div>
+            
+            {/* Card 2 */}
+            <div className="bg-white border border-slate-100 rounded-[20px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.03)] hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-3 mb-3">
+                    <div className="flex gap-[3px] items-end h-[20px]">
+                       <div className="w-[5px] h-[10px] bg-emerald-500 rounded-sm"></div>
+                       <div className="w-[5px] h-[18px] bg-indigo-500 rounded-sm"></div>
+                       <div className="w-[5px] h-[14px] bg-purple-500 rounded-sm"></div>
+                    </div>
+                    <h3 className="text-[15px] font-bold text-[#1e293b]">Capability Analysis</h3>
+                </div>
+                <p className="text-[14px] text-slate-500 leading-relaxed font-medium">We evaluate your knowledge, speed, and confidence.</p>
+            </div>
+            
+            {/* Card 3 */}
+            <div className="bg-white border border-slate-100 rounded-[20px] p-6 shadow-[0_2px_15px_rgba(0,0,0,0.03)] hover:shadow-md transition-shadow">
+                <div className="flex items-center gap-[10px] mb-3 relative">
+                    <div className="relative shrink-0">
+                        <div className="w-[20px] h-[24px] border-[2px] border-[#3b82f6] rounded-[4px] relative bg-blue-50">
+                           <div className="absolute top-[4px] left-[3px] right-[3px] h-[2px] bg-blue-300 rounded-sm"></div>
+                           <div className="absolute top-[9px] left-[3px] right-[5px] h-[2px] bg-blue-300 rounded-sm"></div>
+                        </div>
+                        <div className="absolute -bottom-1 -right-[6px] w-[14px] h-[14px] bg-emerald-500 rounded-full flex items-center justify-center border-2 border-white">
+                           <span className="text-white text-[9px] leading-none font-black block pt-[0.5px]">✓</span>
+                        </div>
+                    </div>
+                    <h3 className="text-[15px] font-bold text-[#1e293b] leading-tight">Personalized <br/>Roadmap</h3>
+                </div>
+                <p className="text-[14px] text-slate-500 leading-relaxed font-medium">Get a structured improvement plan based on your results.</p>
+            </div>
+          </div>
+
         </div>
       </div>
       </AppShell>
@@ -258,7 +325,7 @@ const Assessment = ({ session }) => {
 
   if (status === 'generating_ai' || status === 'submitting' || status === 'loading') {
     return (
-      <AppShell>
+      <AppShell session={session}>
       <div className={wrapCls}>
         <div className="flex flex-col items-center justify-center space-y-6">
           <div className="relative w-20 h-20">
@@ -278,7 +345,7 @@ const Assessment = ({ session }) => {
 
   if (status === 'missing_data') {
     return (
-      <AppShell>
+      <AppShell session={session}>
       <div className={wrapCls}>
         <div className={`${cardLightCls} text-center flex flex-col items-center`}>
           <AlertCircle size={48} className="text-amber-400 mb-6" />
@@ -294,7 +361,7 @@ const Assessment = ({ session }) => {
 
   if (status === 'ready') {
     return (
-      <AppShell>
+      <AppShell session={session}>
       <div className={wrapCls}>
         <div className={`${cardLightCls} text-center flex flex-col items-center`}>
           <div className="w-20 h-20 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mb-6">
@@ -319,7 +386,7 @@ const Assessment = ({ session }) => {
   if (status === 'finished') {
     const score = results.filter(r => r.correct).length;
     return (
-      <AppShell>
+      <AppShell session={session}>
       <div className={wrapCls}>
         <div className={`${cardLightCls} text-center max-w-3xl`}>
           <div className="inline-block bg-emerald-50 text-emerald-600 px-4 py-1.5 rounded-full text-sm font-bold tracking-widest uppercase mb-4">
@@ -369,123 +436,139 @@ const Assessment = ({ session }) => {
   return (
     <AppShell>
     <div className={wrapCls}>
-      {/* Master Progress Header */}
-      <div className="w-full max-w-4xl mb-6 px-2 flex justify-between items-end">
-        <div>
-          <span className="text-indigo-600 font-bold text-lg">Question {currentIndex + 1}</span>
-          <span className="text-slate-400 font-medium text-md ml-1">of {questions.length}</span>
-        </div>
-        <div className="flex items-center gap-2 bg-indigo-50 text-indigo-600 px-4 py-1.5 rounded-full font-mono text-sm font-bold border border-indigo-100">
-          <Clock size={16} />
-          {formatTime(elapsedTime)}
-        </div>
-      </div>
-      
-      {/* Progress Bar Track */}
-      <div className="w-full max-w-4xl h-2 bg-slate-200 rounded-full mb-8 overflow-hidden">
-        <div 
-          className="h-full bg-indigo-500 rounded-full transition-all duration-500 ease-out"
-          style={{ width: `${progressPercent}%` }}
-        ></div>
-      </div>
+       {/* HEADER AREA */}
+       <div className="w-full max-w-[900px] text-left mb-2 px-2 mt-4 md:mt-0">
+           <h1 className="text-[28px] font-bold text-slate-700 mb-3 tracking-snug">Skill Assessment</h1>
+           <p className="text-slate-500 text-[15px]">Answer the questions carefully. Your speed, accuracy, and confidence will be used to analyze your capability.</p>
+           
+           <div className="flex flex-col md:flex-row md:items-center justify-between py-6 border-y border-slate-200/70 my-8 text-[15px]">
+               <div className="flex items-center gap-3">
+                   <div className="w-4 h-1.5 bg-[#185adb] rounded-full shrink-0"></div>
+                   <span className="text-slate-600 font-medium whitespace-nowrap">Question {currentIndex + 1} of {questions.length}</span>
+                   <div className="w-24 h-1 bg-blue-100 rounded-full ml-1 overflow-hidden hidden sm:block mt-0.5">
+                       <div className="h-full bg-[#185adb] rounded-full transition-all duration-300" style={{width: `${progressPercent}%`}}></div>
+                   </div>
+               </div>
+               
+               <div className="flex items-center gap-2 text-slate-800 font-bold mt-4 md:mt-0">
+                   <Clock size={20} className="text-slate-500" strokeWidth={2} />
+                   <span className="text-slate-500 font-medium mr-1">Time:</span> {formatTime(elapsedTime)}
+               </div>
+               
+               <div className="text-slate-600 font-medium mt-4 md:mt-0">
+                   Role: <span className="font-bold text-slate-800">{selectedRole}</span>
+               </div>
+           </div>
+       </div>
 
-      <div className={`${cardLightCls} animate-[fadeIn_0.5s_ease-out]`}>
-        
-        {/* Skill Category Badge */}
-        <div className="absolute top-8 left-8 flex flex-col items-start gap-1">
-          <div className="bg-slate-50 text-slate-500 border border-slate-200 px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider">
-            {currentQ.skills?.skill_name || 'General Module'}
-          </div>
-          <div className={`px-2 py-0.5 rounded-md text-[10px] uppercase font-bold tracking-widest ${currentQ.difficulty === 'Advanced' ? 'bg-orange-50 text-orange-600 border border-orange-200' : 'bg-indigo-50 text-indigo-500 border border-indigo-100'}`}>
-            {currentQ.difficulty} Tier
-          </div>
-        </div>
+       {/* MAIN CARD */}
+       <div className="bg-white rounded-[16px] w-full max-w-[900px] shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)] border border-slate-200/80 flex flex-col mb-10">
+           
+           <div className="p-8 sm:p-12">
+               {/* Question Text */}
+               <h2 className="text-[20px] sm:text-[22px] font-bold text-[#1e293b] mb-10 leading-snug">
+                  {currentQ.displayContent}
+               </h2>
 
-        {/* Question Text */}
-        <h2 className="text-2xl sm:text-3xl font-bold leading-tight mt-12 mb-10 text-slate-800">
-          {currentQ.displayContent}
-        </h2>
+               {/* Multiple Choice Options */}
+               <div className="flex flex-col gap-2 mb-12">
+                  {currentQ.options.map((opt, idx) => {
+                     const isSelected = currentAns?.option === opt;
+                     return (
+                         <button
+                            key={idx}
+                            onClick={() => updateCurrentAnswer(opt, currentAns?.confidence || 3)}
+                            className={`w-full text-left p-4 rounded-xl transition-all duration-200 flex items-center gap-4 ${
+                                isSelected 
+                                   ? 'border border-slate-200 bg-[#f8fafc] shadow-xs' 
+                                   : 'border border-transparent hover:bg-slate-50/50'
+                            }`}
+                         >
+                            <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                                {isSelected ? (
+                                    <CheckCircle2 size={24} fill="#28A745" color="white" strokeWidth={2}/>
+                                ) : (
+                                    <div className="w-[20px] h-[20px] border-2 border-slate-200 rounded-full"></div>
+                                )}
+                            </div>
+                            <span className={`text-[15.5px] ${isSelected ? 'text-[#0f172a] font-medium' : 'text-[#334155]'}`}>
+                                {String.fromCharCode(65 + idx)}. {opt}
+                            </span>
+                         </button>
+                     );
+                  })}
+               </div>
 
-        {/* Multiple Choice Options */}
-        <div className="flex flex-col gap-3 mb-10">
-          {currentQ.options.map((opt, idx) => {
-            const isSelected = currentAns?.option === opt;
-            return (
-              <button
-                key={idx}
-                className={`w-full text-left p-5 rounded-2xl border-2 transition-all duration-200 flex items-center group ${
-                  isSelected 
-                    ? 'border-indigo-500 bg-indigo-50/50 shadow-sm' 
-                    : 'border-slate-100 hover:border-indigo-200 hover:bg-slate-50'
-                }`}
-                onClick={() => updateCurrentAnswer(opt, currentAns?.confidence || 3)}
-              >
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-4 text-sm font-bold border-2 transition-colors ${
-                  isSelected ? 'border-indigo-500 bg-indigo-500 text-white' : 'border-slate-300 text-slate-400 group-hover:border-indigo-300 group-hover:text-indigo-400'
-                }`}>
-                  {String.fromCharCode(65 + idx)}
-                </div>
-                <span className={`text-lg font-medium ${isSelected ? 'text-indigo-900' : 'text-slate-700'}`}>
-                  {opt}
-                </span>
-              </button>
-            )
-          })}
-        </div>
+               {/* Confidence Slider Phase */}
+               <div className="pt-8 border-t border-slate-100">
+                   <h3 className="text-[15px] font-bold text-[#334155] mb-12">How confident are you about your answer?</h3>
+                   
+                   {/* Custom 5-step horizontal tracker */}
+                   <div className="relative flex justify-between items-center w-full px-2 sm:px-8 mb-10">
+                       <div className="absolute left-[8%] right-[8%] top-1/2 -translate-y-1/2 h-[3px] bg-slate-100 -z-10 rounded-full"></div>
+                       {[
+                           { val: 1, label: "Guess" },
+                           { val: 2, label: "Not Sure" },
+                           { val: 3, label: "Somewhat Sure" },
+                           { val: 4, label: "Confident" },
+                           { val: 5, label: "Very Confident" }
+                       ].map(({val, label}) => {
+                           const isActive = currentAns?.confidence === val;
+                           return (
+                               <div key={val} className="relative flex flex-col items-center cursor-pointer group z-10" onClick={() => updateCurrentAnswer(undefined, val)}>
+                                   <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-[15px] transition-all duration-200 ${
+                                       isActive ? 'bg-[#28A745] text-white shadow-[0_2px_8px_rgba(40,167,69,0.3)]' : 'bg-transparent text-transparent group-hover:bg-slate-100 group-hover:text-slate-400'
+                                   }`}>
+                                       {isActive ? val : ''}
+                                   </div>
+                                   {/* Inactive tick mark on the line */}
+                                   {!isActive && (
+                                       <div className="absolute top-1/2 -translate-y-1/2 w-[3px] h-[10px] bg-slate-200 rounded-full group-hover:bg-transparent pointer-events-none"></div>
+                                   )}
+                                   
+                                   <div className="absolute top-10 w-28 text-center flex flex-col sm:flex-row justify-center items-center gap-1 sm:gap-1.5">
+                                       {!isActive && <span className="font-bold text-slate-500 text-[15px]">{val}</span>}
+                                       <span className={`text-[13px] sm:text-[14px] leading-tight ${isActive ? 'font-bold text-[#334155]' : 'text-slate-500'}`}>
+                                           {label}
+                                       </span>
+                                   </div>
+                               </div>
+                           )
+                       })}
+                   </div>
+               </div>
+           </div>
 
-        {/* Confidence Slider Phase */}
-        <div className={`transition-all duration-500 overflow-hidden ${currentAns?.option ? 'max-h-64 opacity-100 mb-10' : 'max-h-0 opacity-0'}`}>
-          <div className="bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-100">
-            <h3 className="text-base font-bold text-slate-500 uppercase tracking-widest text-center mb-6">Psychological Confidence Rating</h3>
-            
-            <div className="flex flex-col gap-6 max-w-xl mx-auto">
-               <input
-                type="range"
-                min="1" max="5" step="1"
-                value={currentAns?.confidence || 3}
-                onChange={(e) => updateCurrentAnswer(undefined, parseInt(e.target.value))}
-                className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-              />
-              <div className="flex justify-between w-full px-1 text-xs sm:text-sm font-bold text-slate-400">
-                <span className={currentAns?.confidence === 1 ? 'text-rose-500 border-b-2 border-rose-500 pb-1' : ''}>1 (Guess)</span>
-                <span className={currentAns?.confidence === 2 ? 'text-orange-500' : ''}>2</span>
-                <span className={currentAns?.confidence === 3 ? 'text-amber-500' : ''}>3 (Unsure)</span>
-                <span className={currentAns?.confidence === 4 ? 'text-teal-500' : ''}>4</span>
-                <span className={currentAns?.confidence === 5 ? 'text-emerald-500 border-b-2 border-emerald-500 pb-1' : ''}>5 (Certain)</span>
-              </div>
-            </div>
-          </div>
-        </div>
+           {/* Footer Action Row */}
+           <div className="bg-[#f8fafc] border-t border-slate-200/80 p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 rounded-b-[16px]">
+               <button 
+                  className="w-full sm:w-auto bg-white border border-slate-200 text-[#334155] font-semibold px-8 py-3.5 rounded-xl shadow-sm hover:bg-slate-50 disabled:opacity-50 transition-colors"
+                  disabled={currentIndex === 0}
+                  onClick={handlePrevious}
+               >
+                  Previous
+               </button>
+               
+               <button 
+                  className="w-full justify-center bg-[#185adb] text-white font-semibold flex-1 max-w-[220px] py-3.5 rounded-xl shadow-[0_2px_8px_rgba(24,90,219,0.25)] hover:bg-blue-700 disabled:opacity-50 transition-colors text-center text-[15.5px]"
+                  disabled={!currentAns?.option || !currentAns?.confidence}
+                  onClick={currentIndex === questions.length - 1 ? handleSubmit : handleNext}
+               >
+                  {currentIndex === questions.length - 1 ? 'Submit & Finalize' : 'Next'}
+               </button>
 
-        {/* Navigation Row */}
-        <div className="flex justify-between items-center pt-6 border-t border-slate-100 mt-auto">
-          <button 
-            className={btnSecondary} 
-            disabled={currentIndex === 0}
-            onClick={handlePrevious}
-          >
-            <ChevronLeft size={20} /> Previous
-          </button>
-          
-          {currentIndex === questions.length - 1 ? (
-             <button 
-               className={`${btnPrimary} bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20 text-md truncate`}
-               disabled={!currentAns?.option || !currentAns?.confidence || status === 'submitting'}
-               onClick={handleSubmit}
-             >
-               {status === 'submitting' ? 'Calculating...' : 'Submit Evaluation'} <CheckCircle2 size={20} />
-             </button>
-          ) : (
-             <button 
-               className={btnPrimary}
-               disabled={!currentAns?.option || !currentAns?.confidence}
-               onClick={handleNext}
-             >
-               Next Stage <ChevronRight size={20} />
-             </button>
-          )}
-        </div>
-      </div>
+               {currentIndex !== questions.length - 1 && (
+                 <button 
+                    className="w-full justify-center bg-[#28A745] text-white font-semibold flex-1 max-w-[220px] py-3.5 rounded-xl shadow-[0_2px_8px_rgba(40,167,69,0.25)] hover:bg-[#218838] disabled:opacity-50 transition-colors text-center text-[15.5px]"
+                    disabled={!currentAns?.option || !currentAns?.confidence}
+                    onClick={handleSubmit} 
+                 >
+                    Submit
+                 </button>
+               )}
+           </div>
+       </div>
+
     </div>
     </AppShell>
   );
