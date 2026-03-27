@@ -7,7 +7,7 @@ import {
     MapPin, BarChart3, Settings, ShieldAlert, Trees
 } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, AreaChart, Area } from 'recharts';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../Components/Sidebar';
 
 // Simple SVG Half Donut Component for metrics
 const HalfDonut = ({ percentage, colorClass, gradientId, strokeWidth = 12, size = 120 }) => {

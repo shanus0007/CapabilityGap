@@ -5,7 +5,7 @@ import { calculateCapabilityScores } from '../utils/scoreCalculator';
 import { analyzeSkillGaps } from '../utils/gapAnalyzer';
 import { generateRoleAssessment } from '../utils/aiQuestionGenerator';
 import { ChevronLeft, ChevronRight, CheckCircle2, Clock, AlertCircle, Sparkles, BrainCircuit, Trees } from 'lucide-react';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../Components/Sidebar';
 
 const Assessment = ({ session }) => {
   const [questions, setQuestions] = useState([]);

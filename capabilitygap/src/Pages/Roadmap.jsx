@@ -6,7 +6,7 @@ import {
     LayoutDashboard, CheckSquare, Target, 
     MapPin, BarChart3, ChevronRight, CheckCircle2, Circle, Trees
 } from 'lucide-react';
-import Sidebar from '../components/Sidebar';
+import Sidebar from '../Components/Sidebar';
 
 export default function Roadmap({ session }) {
     const navigate = useNavigate();
