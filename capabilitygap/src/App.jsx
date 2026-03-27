@@ -11,12 +11,14 @@ import Contact from './Pages/Contact'
 import Login from './Pages/Login'
 import Signup from './Pages/Signup'
 import Dashboard from './Pages/Dashboard'
+import Assessment from './Pages/Assessment'
+import Roadmap from './Pages/Roadmap'
 import './App.css'
 
 function App() {
   const [session, setSession] = useState(null)
   const location = useLocation()
-  
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
@@ -31,7 +33,7 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/dashboard'
+  const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/dashboard' || location.pathname === '/assessment' || location.pathname === '/roadmap'
 
   return (
     <>
@@ -42,17 +44,25 @@ function App() {
         <Route path="/process" element={<Process />} />
         <Route path="/pricing" element={<Pricing />} />
         <Route path="/contact" element={<Contact />} />
-        <Route 
-          path="/login" 
-          element={session ? <Navigate to="/dashboard" /> : <Login />} 
+        <Route
+          path="/login"
+          element={session ? <Navigate to="/dashboard" /> : <Login />}
         />
-        <Route 
-          path="/signup" 
-          element={session ? <Navigate to="/dashboard" /> : <Signup />} 
+        <Route
+          path="/signup"
+          element={session ? <Navigate to="/dashboard" /> : <Signup />}
         />
-        <Route 
-          path="/dashboard" 
-          element={session ? <Dashboard session={session} /> : <Navigate to="/login" />} 
+        <Route
+          path="/dashboard"
+          element={session ? <Dashboard session={session} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/assessment"
+          element={session ? <Assessment session={session} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/roadmap"
+          element={session ? <Roadmap session={session} /> : <Navigate to="/login" />}
         />
       </Routes>
       {!hideNavbar && <Footer />}
