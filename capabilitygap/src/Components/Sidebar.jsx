@@ -3,10 +3,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabase';
 import { 
     LayoutDashboard, CheckSquare, Target, 
-    MapPin, BarChart3, LogOut, Trees, Menu, X
+    MapPin, BarChart3, LogOut, Trees, Menu, X, Bell
 } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ session }) {
     const navigate = useNavigate();
     const location = useLocation();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,9 +27,18 @@ export default function Sidebar() {
                 </div>
                 <span className="font-bold text-lg tracking-tighter text-slate-900">CapabilityGap</span>
             </div>
-            <button onClick={() => setMobileMenuOpen(true)} className="p-2 -mr-2 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors">
-                <Menu size={24} />
-            </button>
+            <div className="flex items-center gap-4">
+                <button className="text-slate-400 hover:text-slate-600 transition-colors relative">
+                    <Bell size={20} />
+                    <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-rose-500 rounded-full"></span>
+                </button>
+                <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-sm border border-slate-200">
+                    {session?.user?.user_metadata?.full_name ? session.user.user_metadata.full_name.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <button onClick={() => setMobileMenuOpen(true)} className="p-1.5 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors border border-transparent hover:border-slate-200">
+                    <Menu size={24} />
+                </button>
+            </div>
         </div>
 
         {/* ---------------- MOBILE DRAWER ---------------- */}

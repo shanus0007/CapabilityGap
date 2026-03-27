@@ -133,11 +133,12 @@ export default function Roadmap({ session }) {
     return (
         <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-slate-800">
             {/* ---------------- SIDEBAR ---------------- */}
-            <Sidebar />
+            <Sidebar session={session} />
 
             {/* ---------------- MAIN CONTENT ---------------- */}
             <main className="flex-1 flex flex-col h-screen overflow-hidden">
-                <header className="h-20 bg-[#F8FAFC] flex flex-col md:flex-row items-center justify-between px-8 border-b border-transparent shrink-0">
+                {/* ---------------- HEADER ---------------- */}
+                <header className="h-20 bg-[#F8FAFC] hidden md:flex items-center justify-between px-8 border-b border-transparent shrink-0">
                     <div className="relative w-full max-w-md hidden md:block">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <Search size={18} className="text-slate-400" />

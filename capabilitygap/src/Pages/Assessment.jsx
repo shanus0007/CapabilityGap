@@ -210,7 +210,7 @@ const Assessment = ({ session }) => {
 
   const AppShell = ({ children }) => (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col md:flex-row font-sans text-slate-800">
-        <Sidebar />
+        <Sidebar session={session} />
         <main className="flex-1 flex flex-col h-screen overflow-hidden">
              <div className="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col items-center justify-center bg-slate-50 transition-colors duration-500">
                   {children}
