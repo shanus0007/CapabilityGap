@@ -289,7 +289,7 @@ export default function Dashboard({ session }) {
                                     <ShieldAlert size={16} className="text-amber-500" />
                                     <h3 className="text-sm font-semibold text-slate-500">Weakest Skill</h3>
                                 </div>
-                                <p className="text-2xl font-bold text-slate-800 mb-1 line-clamp-1">{weakestSkill?.skills?.skill_name || 'N/A'}</p>
+                                <p className="text-2xl font-bold text-slate-800 mb-1 leading-snug">{weakestSkill?.skills?.skill_name || 'N/A'}</p>
                                 <p className="text-sm font-medium text-slate-400 flex items-center gap-1.5">
                                     <Target size={14} className="text-slate-300" />
                                     {weakestSkill?.capability_score || 0}% Capability Match
