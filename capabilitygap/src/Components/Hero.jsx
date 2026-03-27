@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight, PieChart, Star, Activity, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const Hero = () => {
+    const navigate = useNavigate()
     const [isMobile, setIsMobile] = useState(false)
 
     useEffect(() => {
@@ -43,7 +45,9 @@ const Hero = () => {
                         </p>
 
                         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 w-full sm:w-auto">
-                            <button className="group bg-black text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full flex items-center gap-3 font-medium shadow-xl hover:shadow-2xl transition-all w-full sm:w-auto justify-center">
+                            <button
+                                onClick={() => navigate('/signup')}
+                                className="group bg-black text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full flex items-center gap-3 font-medium shadow-xl hover:shadow-2xl transition-all w-full sm:w-auto justify-center">
                                 Get Early Access
                                 <span className="bg-white/20 p-1 rounded-full group-hover:translate-x-1 transition-transform">
                                     <ArrowRight size={16} />
