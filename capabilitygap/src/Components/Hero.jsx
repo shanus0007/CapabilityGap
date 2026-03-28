@@ -112,9 +112,48 @@ const Hero = () => {
                 </div>
 
 
-                <div className="flex flex-col items-center text-center justify-center max-w-4xl mx-auto space-y-6 md:space-y-8" >
-                    <h1 className='text-3xl font-medium'>Meet Capability Gap <span className="font-ChettaVissto italic">Intelligence</span></h1>
+                <div className="flex flex-col items-center text-center justify-center max-w-4xl mx-auto space-y-6 md:space-y-8 mt-32 mb-16" >
+                    <h1 className='text-3xl md:text-5xl font-medium tracking-tight'>
+                        Meet Capability Gap <span className="font-ChettaVissto italic text-lime-500">Intelligence</span>
+                    </h1>
+                    <p className="text-gray-500 max-w-2xl text-lg px-4">
+                        Experience the next generation of skill tracking and capability management in an intuitive, beautifully designed interface.
+                    </p>
                 </div>
+
+                <div className="w-full max-w-6xl mx-auto px-4 md:px-8 relative mb-32 z-20">
+                    <motion.div
+                        initial={{ opacity: 0, y: 50 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        className="relative rounded-[20px] md:rounded-[32px] border border-gray-200/60 bg-white/40 backdrop-blur-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-2 md:p-3"
+                    >
+                        <div className="absolute inset-0 bg-gradient-to-tr from-lime-100/30 to-slate-100/30 -z-10 rounded-[32px]" />
+                        <div className="rounded-[12px] md:rounded-[20px] overflow-hidden border border-gray-200 bg-white shadow-inner flex flex-col">
+                            {/* Browser Header Mockup */}
+                            <div className="h-10 md:h-12 bg-gray-50/90 border-b border-gray-100 flex items-center px-4 gap-2 shrink-0">
+                                <div className="flex gap-2">
+                                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]"></div>
+                                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></div>
+                                    <div className="w-2.5 h-2.5 md:w-3 md:h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]"></div>
+                                </div>
+                                <div className="ml-4 flex-1 flex justify-center">
+                                    <div className="bg-white border border-gray-200/80 rounded-md px-4 py-1.5 text-[11px] md:text-xs text-gray-400 font-medium flex items-center justify-center min-w-[150px] md:min-w-[200px] shadow-sm">
+                                        capabilitygap.com/dashboard
+                                    </div>
+                                </div>
+                                <div className="w-[52px]"></div> {/* spacer for centering */}
+                            </div>
+                            <img
+                                src="https://i.ibb.co/1fpmFQmD/sc-dashboard.png"
+                                alt="Capability Gap Dashboard Preview"
+                                className="w-full h-auto object-cover"
+                            />
+                        </div>
+                    </motion.div>
+                </div>
+
             </section>
         </>
     )
