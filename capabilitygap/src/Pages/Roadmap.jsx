@@ -155,9 +155,17 @@ export default function Roadmap({ session }) {
                             <span className="absolute top-0 right-0 w-2 h-2 bg-red-400 border border-white rounded-full"></span>
                         </button>
                         <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-                            <div className="w-9 h-9 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-500 text-sm border-2 border-white shadow-sm">
-                                {name.charAt(0).toUpperCase()}
-                            </div>
+                            {user.user_metadata?.avatar_url ? (
+                                <img 
+                                    src={user.user_metadata.avatar_url} 
+                                    alt="UserAvatar" 
+                                    className="w-9 h-9 rounded-full border-2 border-white shadow-sm object-cover"
+                                />
+                            ) : (
+                                <div className="w-9 h-9 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-500 text-sm border-2 border-white shadow-sm">
+                                    {name.charAt(0).toUpperCase()}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </header>

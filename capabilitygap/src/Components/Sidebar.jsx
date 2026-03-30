@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '../supabase';
 import {
-    LayoutDashboard, CheckSquare, Target,
-    MapPin, BarChart3, LogOut, Trees, Menu, X, Bell
+    LayoutDashboard, CheckSquare, Target, FileText,
+    MapPin, BarChart3, LogOut, Trees, Menu, X, Bell, User
 } from 'lucide-react';
 
 export default function Sidebar({ session }) {
@@ -32,8 +32,12 @@ export default function Sidebar({ session }) {
                         <Bell size={20} />
                         <span className="absolute top-0 right-0 w-1.5 h-1.5 bg-rose-500 rounded-full"></span>
                     </button>
-                    <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-sm border border-slate-200">
-                        {session?.user?.user_metadata?.full_name ? session.user.user_metadata.full_name.charAt(0).toUpperCase() : 'U'}
+                    <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-sm border border-slate-200 overflow-hidden">
+                        {session?.user?.user_metadata?.avatar_url ? (
+                            <img src={session.user.user_metadata.avatar_url} alt="Avatar" className="w-full h-full object-cover" />
+                        ) : (
+                            session?.user?.user_metadata?.full_name ? session.user.user_metadata.full_name.charAt(0).toUpperCase() : 'U'
+                        )}
                     </div>
                     <button onClick={() => setMobileMenuOpen(true)} className="p-1.5 text-slate-600 hover:bg-slate-50 rounded-lg transition-colors border border-transparent hover:border-slate-200">
                         <Menu size={24} />
@@ -61,13 +65,21 @@ export default function Sidebar({ session }) {
                                     className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl relative transition-colors ${isActive('/assessment') ? 'bg-indigo-50/50 text-indigo-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}>
                                     <CheckSquare size={20} /> Take Assessment
                                 </button>
+                                <button onClick={() => { setMobileMenuOpen(false); navigate('/resume-analysis'); }}
+                                    className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl relative transition-colors ${isActive('/resume-analysis') ? 'bg-indigo-50/50 text-indigo-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}>
+                                    <FileText size={20} /> Resume Gap
+                                </button>
                                 <button onClick={() => { setMobileMenuOpen(false); navigate('/roadmap'); }}
                                     className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl relative transition-colors ${isActive('/roadmap') ? 'bg-indigo-50/50 text-indigo-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}>
                                     <MapPin size={20} /> Learning Roadmap
                                 </button>
                             </div>
                         </div>
-                        <div>
+                        <div className="space-y-1">
+                            <button onClick={() => { setMobileMenuOpen(false); navigate('/profile'); }}
+                                className={`w-full flex items-center gap-3 px-4 py-4 rounded-2xl relative transition-colors ${isActive('/profile') ? 'bg-indigo-50/50 text-indigo-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}>
+                                <User size={20} /> My Profile
+                            </button>
                             <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-4 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-colors font-semibold">
                                 <LogOut size={20} /> Logout
                             </button>
@@ -101,6 +113,13 @@ export default function Sidebar({ session }) {
                             Take Assessment
                         </button>
 
+                        <button onClick={() => navigate('/resume-analysis')}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl relative transition-colors ${isActive('/resume-analysis') ? 'bg-indigo-50/50 text-indigo-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}>
+                            {isActive('/resume-analysis') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-indigo-500 rounded-r-full"></div>}
+                            <FileText size={18} />
+                            Resume Gap
+                        </button>
+
                         <button onClick={() => navigate('/roadmap')}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl relative transition-colors ${isActive('/roadmap') ? 'bg-indigo-50/50 text-indigo-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}>
                             {isActive('/roadmap') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-indigo-500 rounded-r-full"></div>}
@@ -111,6 +130,12 @@ export default function Sidebar({ session }) {
                 </div>
 
                 <div className="px-4 pb-6 space-y-1 text-sm font-medium">
+                    <button onClick={() => navigate('/profile')}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl relative transition-colors ${isActive('/profile') ? 'bg-indigo-50/50 text-indigo-600' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'}`}>
+                        {isActive('/profile') && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-indigo-500 rounded-r-full"></div>}
+                        <User size={18} />
+                        My Profile
+                    </button>
                     <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-colors">
                         <LogOut size={18} />
                         Logout

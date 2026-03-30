@@ -13,6 +13,8 @@ import Signup from './Pages/Signup'
 import Dashboard from './Pages/Dashboard'
 import Assessment from './Pages/Assessment'
 import Roadmap from './Pages/Roadmap'
+import ResumeAnalysis from './Pages/ResumeAnalysis'
+import Profile from './Pages/Profile'
 import './App.css'
 
 function App() {
@@ -33,7 +35,7 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const hideNavbar = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/dashboard' || location.pathname === '/assessment' || location.pathname === '/roadmap'
+  const hideNavbar = ['/login', '/signup', '/dashboard', '/assessment', '/roadmap', '/resume-analysis', '/profile'].includes(location.pathname)
 
   return (
     <>
@@ -63,6 +65,14 @@ function App() {
         <Route
           path="/roadmap"
           element={session ? <Roadmap session={session} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/resume-analysis"
+          element={session ? <ResumeAnalysis session={session} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/profile"
+          element={session ? <Profile session={session} /> : <Navigate to="/login" />}
         />
       </Routes>
       {!hideNavbar && <Footer />}

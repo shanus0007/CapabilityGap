@@ -114,7 +114,7 @@ const Hero = () => {
 
                 <div className="flex flex-col items-center text-center justify-center max-w-4xl mx-auto space-y-6 md:space-y-8 mt-32 mb-16" >
                     <h1 className='text-3xl md:text-5xl font-medium tracking-tight'>
-                        Meet Capability Gap <span className="font-ChettaVissto italic text-lime-500">Intelligence</span>
+                        Meet Capability Gap <span className="font-ChettaVissto italic text-blue-600">Intelligence</span>
                     </h1>
                     <p className="text-gray-500 max-w-2xl text-lg px-4">
                         Experience the next generation of skill tracking and capability management in an intuitive, beautifully designed interface.
@@ -129,7 +129,7 @@ const Hero = () => {
                         viewport={{ once: true, margin: "-100px" }}
                         className="relative rounded-[20px] md:rounded-[32px] border border-gray-200/60 bg-white/40 backdrop-blur-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.1)] p-2 md:p-3"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-tr from-lime-100/30 to-slate-100/30 -z-10 rounded-[32px]" />
+                        <div className="absolute inset-0 bg-linear-to-tr from-lime-100/30 to-slate-100/30 -z-10 rounded-[32px]" />
                         <div className="rounded-[12px] md:rounded-[20px] overflow-hidden border border-gray-200 bg-white shadow-inner flex flex-col">
                             {/* Browser Header Mockup */}
                             <div className="h-10 md:h-12 bg-gray-50/90 border-b border-gray-100 flex items-center px-4 gap-2 shrink-0">

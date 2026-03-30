@@ -36,7 +36,7 @@ const Login = () => {
         >
             <div className="absolute inset-0 bg-blue-50/20 backdrop-blur-[2px]"></div>
 
-            <div className="bg-white/90 backdrop-blur-xl rounded-3xl sm:rounded-[1.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] w-full max-w-[360px] p-5 sm:p-6 md:p-8 relative z-10 border border-white/50">
+            <div className="bg-white/90 backdrop-blur-xl rounded-3xl sm:rounded-3xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] w-full max-w-[360px] p-5 sm:p-6 md:p-8 relative z-10 border border-white/50">
                 <div className="flex flex-col items-center mb-5">
                     <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center mb-5 border border-slate-100">
                         <LogIn size={20} className="text-slate-800" />
@@ -96,7 +96,7 @@ const Login = () => {
                         <a href="#" className="text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors">Forgot password?</a>
                     </div>
 
-                    <button 
+                    <button
                         disabled={loading}
                         className="w-full bg-[#1c1c1e] text-white font-medium py-3 rounded-2xl hover:bg-black transition-colors shadow-lg shadow-black/10 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                     >

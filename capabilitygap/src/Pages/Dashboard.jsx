@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
     Search, Bell, Inbox, User, LogOut, 
     LayoutDashboard, CheckSquare, Target, 
-    MapPin, BarChart3, Settings, ShieldAlert, Trees
+    MapPin, BarChart3, Settings, ShieldAlert, Trees, FileText
 } from 'lucide-react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip as RechartsTooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, AreaChart, Area } from 'recharts';
 import Sidebar from '../Components/Sidebar';
@@ -85,7 +85,10 @@ export default function Dashboard({ session }) {
                 
                 // Fetch Global Maps to cross-reference logically
                 const { data: allSkills } = await supabase.from('skills').select('id, skill_name');
-                const { data: allQuestions } = await supabase.from('questions').select('id, expected_time');
+                const { data: legacyQuestions } = await supabase.from('questions').select('id, expected_time');
+                const { data: bankQuestions } = await supabase.from('questions_bank').select('id, expected_time');
+                
+                const allQuestions = [...(legacyQuestions || []), ...(bankQuestions || [])];
 
                 // Re-hydrate relationships directly into arrays dynamically in logic memory instead of SQL constraints!
                 let capData = rawCapData || [];
@@ -105,7 +108,8 @@ export default function Dashboard({ session }) {
 
                 if (allQuestions?.length > 0) {
                     attemptData.forEach(a => {
-                        const m = allQuestions.find(q => q.id === a.question_id);
+                        // Support both integer legacy IDs and new UUIDs
+                        const m = allQuestions.find(q => String(q.id) === String(a.question_id));
                         if(m) a.questions = { expected_time: m.expected_time };
                     });
                 }
@@ -226,9 +230,17 @@ export default function Dashboard({ session }) {
                             <span className="absolute top-0 right-0 w-2 h-2 bg-red-400 border border-white rounded-full"></span>
                         </button>
                         <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
-                            <div className="w-9 h-9 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-500 text-sm border-2 border-white shadow-sm">
-                                {name.charAt(0).toUpperCase()}
-                            </div>
+                            {user.user_metadata?.avatar_url ? (
+                                <img 
+                                    src={user.user_metadata.avatar_url} 
+                                    alt="UserAvatar" 
+                                    className="w-9 h-9 rounded-full border-2 border-white shadow-sm object-cover"
+                                />
+                            ) : (
+                                <div className="w-9 h-9 bg-slate-200 rounded-full flex items-center justify-center font-bold text-slate-500 text-sm border-2 border-white shadow-sm">
+                                    {name.charAt(0).toUpperCase()}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </header>
@@ -238,15 +250,124 @@ export default function Dashboard({ session }) {
                        <div className="flex items-center justify-center h-full">
                            <div className="text-lg text-slate-400 animate-pulse font-medium">Loading Intelligence Data...</div>
                        </div>
-                    ) : capScores.length === 0 ? (
-                       <div className="flex flex-col items-center justify-center h-full max-w-lg mx-auto text-center">
-                           <ShieldAlert size={48} className="text-amber-400 mb-4" />
-                           <h2 className="text-2xl font-bold text-slate-800 mb-2">No Capability Data Found</h2>
-                           <p className="text-slate-500 mb-6">You haven't completed any baseline assessments yet. Take an assessment to unlock your intelligence dashboard.</p>
-                           <button onClick={() => navigate('/assessment')} className="bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold shadow-md shadow-indigo-200 hover:bg-indigo-600 transition">
-                               Start Assessment Now
-                           </button>
-                       </div>
+                    ) : (capScores.length === 0 && attempts.length === 0) ? (
+                        <div className="flex flex-col items-center justify-center h-full max-w-4xl mx-auto w-full px-4">
+                            <div className="mb-10 text-center">
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3 tracking-tight">Identify Your Capability Gaps</h2>
+                                <p className="text-slate-500 text-[15px] max-w-xl mx-auto font-medium leading-relaxed">Choose how you want our AI engine to evaluate your current skill levels and instantly generate your personalized roadmap.</p>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full">
+                                {/* Option 1: AI Quiz */}
+                                <div 
+                                    onClick={() => navigate('/assessment')}
+                                    className="group bg-white rounded-[24px] p-3 border border-slate-200/80 shadow-sm hover:shadow-lg hover:shadow-indigo-500/5 transition-all duration-500 cursor-pointer flex flex-col text-left relative overflow-hidden"
+                                >
+                                    {/* Top Graphic Container */}
+                                    <div className="relative w-full h-[240px] bg-slate-50/80 rounded-[16px] overflow-hidden flex items-center justify-center">
+                                        {/* Grid Background */}
+                                        <div 
+                                            className="absolute inset-0 opacity-50" 
+                                            style={{ 
+                                                backgroundImage: `url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 0L0 0L0 24' fill='none' stroke='%23cbd5e1' stroke-width='1'/%3E%3C/svg%3E")`, 
+                                                maskImage: 'radial-gradient(ellipse at center, black 30%, transparent 100%)',
+                                                WebkitMaskImage: 'radial-gradient(ellipse at center, black 30%, transparent 100%)'
+                                            }}
+                                        ></div>
+                                        
+                                        {/* Abstract UI Elements */}
+                                        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[60%] w-[280px] h-[140px] flex items-center justify-between">
+                                            {/* Left pill */}
+                                            <div className="bg-white px-3 py-1.5 rounded-full shadow-sm border border-slate-100 flex items-center gap-2 transform -translate-y-4 group-hover:-translate-y-5 transition-transform duration-500">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400"></div>
+                                                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Baseline</span>
+                                            </div>
+                                            
+                                            {/* Right box */}
+                                            <div className="bg-white px-3 py-1.5 rounded-xl shadow-sm border border-slate-100 flex flex-col items-center gap-1 transform translate-y-6 group-hover:translate-y-5 transition-transform duration-500">
+                                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Target Role</span>
+                                                <div className="h-1 w-8 bg-slate-100 rounded-full overflow-hidden"><div className="h-full bg-indigo-400 w-2/3"></div></div>
+                                            </div>
+
+                                            {/* SVG connecting lines */}
+                                            <svg className="absolute inset-0 w-full h-full -z-10" viewBox="0 0 280 140">
+                                                <path d="M 60 40 C 100 40, 100 70, 140 70" fill="none" stroke="#e2e8f0" strokeWidth="2" />
+                                                <path d="M 220 100 C 180 100, 180 70, 140 70" fill="none" stroke="#e2e8f0" strokeWidth="2" />
+                                                <circle cx="140" cy="70" r="4" fill="#818cf8" />
+                                            </svg>
+                                        </div>
+
+                                        {/* Central Core */}
+                                        <div className="relative z-10 w-[72px] h-[72px] bg-linear-to-b from-blue-500 to-indigo-600 rounded-full shadow-[0_0_40px_rgba(99,102,241,0.3)] flex items-center justify-center group-hover:scale-105 transition-transform duration-500 ring-8 ring-white/60">
+                                            <Target size={30} className="text-white relative z-10" />
+                                            {/* Radar rings */}
+                                            <div className="absolute inset-0 rounded-full border border-indigo-400/30 animate-[ping_2.5s_cubic-bezier(0,0,0.2,1)_infinite]"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="pt-6 pb-3 px-3">
+                                        <h3 className="text-[18px] font-bold text-slate-800 mb-2 tracking-tight">Diagnostic Assessment</h3>
+                                        <p className="text-slate-500 text-[14px] font-medium leading-relaxed mb-1 opacity-90">Take an adaptive AI quiz strictly mapped to your target role to benchmark your exact capability gaps.</p>
+                                    </div>
+                                </div>
+                                
+                                {/* Option 2: Resume Parser */}
+                                <div 
+                                    onClick={() => navigate('/resume-analysis')}
+                                    className="group bg-white rounded-[24px] p-3 border border-slate-200/80 shadow-sm hover:shadow-lg hover:shadow-purple-500/5 transition-all duration-500 cursor-pointer flex flex-col text-left relative overflow-hidden"
+                                >
+                                    {/* Top Graphic Container */}
+                                    <div className="relative w-full h-[240px] bg-slate-50/80 rounded-[16px] overflow-hidden flex items-center justify-center">
+                                        {/* Grid Background */}
+                                        <div 
+                                            className="absolute inset-0 opacity-50" 
+                                            style={{ 
+                                                backgroundImage: `url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M24 0L0 0L0 24' fill='none' stroke='%23cbd5e1' stroke-width='1'/%3E%3C/svg%3E")`, 
+                                                maskImage: 'linear-gradient(to bottom, black 20%, transparent 100%)',
+                                                WebkitMaskImage: 'linear-gradient(to bottom, black 20%, transparent 100%)'
+                                            }}
+                                        ></div>
+                                        
+                                        {/* Abstract UI Elements */}
+                                        <div className="absolute w-full h-full flex items-center justify-center">
+                                            {/* Background shadow layer */}
+                                            <div className="absolute w-36 h-44 bg-white rounded-xl shadow-[0_20px_40px_rgba(0,0,0,0.04)] rotate-3 translate-x-4 border border-slate-100 group-hover:rotate-6 transition-transform duration-500"></div>
+                                            
+                                            {/* Foreground Document */}
+                                            <div className="relative z-10 w-36 h-44 bg-white rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.06)] -rotate-3 -translate-x-2 border border-slate-100 p-4 flex flex-col gap-2.5 group-hover:rotate-0 transition-transform duration-500">
+                                                <div className="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center mb-1">
+                                                    <FileText size={16} className="text-purple-500" />
+                                                </div>
+                                                <div className="w-3/4 h-1.5 bg-slate-100 rounded-full"></div>
+                                                <div className="w-full h-1.5 bg-slate-100 rounded-full"></div>
+                                                <div className="w-5/6 h-1.5 bg-slate-100 rounded-full"></div>
+                                                <div className="mt-auto flex gap-1.5">
+                                                    <div className="w-4 h-4 bg-purple-100 rounded flex items-center justify-center">
+                                                        <div className="w-1.5 h-1.5 bg-purple-400 rounded-full"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Floating extraction badge */}
+                                            <div className="absolute z-20 top-12 md:right-4 lg:right-10 right-6 bg-white/95 backdrop-blur-md px-3 py-2.5 rounded-xl shadow-[0_8px_20px_rgba(0,0,0,0.06)] border border-slate-200/80 flex items-center gap-2.5 group-hover:-translate-y-2 group-hover:shadow-[0_12px_24px_rgba(0,0,0,0.08)] transition-all duration-500">
+                                                <div className="relative w-5 h-5 rounded-full bg-linear-to-tr from-purple-500 to-indigo-500 flex items-center justify-center">
+                                                    <div className="absolute inset-0 bg-white/20 rounded-full animate-ping opacity-50"></div>
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[10px] font-bold text-slate-800 leading-tight">Skills Extracted</span>
+                                                    <span className="text-[9px] text-slate-400 font-medium">Gap analyzed</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="pt-6 pb-3 px-3">
+                                        <h3 className="text-[18px] font-bold text-slate-800 mb-2 tracking-tight">Resume Intelligence</h3>
+                                        <p className="text-slate-500 text-[14px] font-medium leading-relaxed mb-1 opacity-90">Upload your resume and let Gemini cross-reference your experience perfectly against industry capabilities.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     ) : (
                     <>
                     {/* Top Stats Row */}

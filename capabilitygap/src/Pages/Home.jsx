@@ -1,5 +1,5 @@
-import React from 'react'
 import Hero from '../Components/Hero'
+import ResumeAnalysisSection from '../Components/ResumeAnalysisSection'
 import Process from './Process'
 
 const Home = () => {
@@ -7,6 +7,8 @@ const Home = () => {
         <>
             <Hero />
             <Process />
+            <ResumeAnalysisSection />
+
         </>
     )
 }

@@ -14,7 +14,7 @@ export const calculateCapabilityScores = async (userId, expectedTimePerQuestion 
   }
 
   try {
-    // 1. Fetch all attempts for this user and map manually without relying on SQL explicit references preventing 400 Bad Requests
+    // 1. Fetch all attempts for this user
     const { data: rawAttempts, error: fetchError } = await supabase
       .from('attempts')
       .select('id, correct, time_taken, confidence_rating, question_id')
@@ -22,18 +22,32 @@ export const calculateCapabilityScores = async (userId, expectedTimePerQuestion 
 
     if (fetchError) throw fetchError;
 
-    const { data: allQuestions } = await supabase.from('questions').select('id, skill_id');
-
     const attempts = rawAttempts || [];
-    if (allQuestions?.length > 0) {
-      attempts.forEach(a => {
-        const match = allQuestions.find(q => q.id === a.question_id);
-        if (match) a.questions = { skill_id: match.skill_id };
-      });
-    }
     if (!attempts || attempts.length === 0) {
       return { success: true, message: "No attempts found to process." };
     }
+
+    const { data: allQuestions } = await supabase.from('questions').select('id, skill_id');
+    const { data: allBankQuestions } = await supabase.from('questions_bank').select('id, skill_name');
+    const { data: allSkills } = await supabase.from('skills').select('id, skill_name');
+
+    attempts.forEach(a => {
+      // First check original questions table
+      const matchOld = allQuestions?.find(q => q.id === a.question_id);
+      if (matchOld) {
+         a.questions = { skill_id: matchOld.skill_id };
+         return;
+      }
+      
+      // Fallback check questions_bank
+      const matchBank = allBankQuestions?.find(q => q.id === a.question_id);
+      if (matchBank && allSkills) {
+         const matchingSkill = allSkills.find(s => s.skill_name === matchBank.skill_name);
+         if (matchingSkill) {
+            a.questions = { skill_id: matchingSkill.id };
+         }
+      }
+    });
 
     // 2. Group attempts by skill_id
     const skillData = {};
@@ -86,10 +100,10 @@ export const calculateCapabilityScores = async (userId, expectedTimePerQuestion 
       upsertPayload.push({
         user_id: userId,
         skill_id: skillId,
-        knowledge_score: Math.round(knowledgeScore * 100 * 100) / 100,
-        speed_score: Math.round(speedScore * 100 * 100) / 100,
-        confidence_score: Math.round(confidenceScore * 100 * 100) / 100,
-        capability_score: Math.round(capabilityScore * 100 * 100) / 100,
+        knowledge_score: Math.round(knowledgeScore * 100),
+        speed_score: Math.round(speedScore * 100),
+        confidence_score: Math.round(confidenceScore * 100),
+        capability_score: Math.round(capabilityScore * 100),
         // The updated_at trigger defined in Supabase schema will automatically update timestamp
       });
     }
