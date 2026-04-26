@@ -6,6 +6,7 @@ import { analyzeSkillGaps } from '../utils/gapAnalyzer';
 import { generateAssessmentSession } from '../utils/aiQuestionGenerator';
 import { ChevronLeft, ChevronRight, CheckCircle2, Clock, AlertCircle, Sparkles, Trees } from 'lucide-react';
 import Sidebar from '../Components/Sidebar';
+import { deductCredits } from '../utils/creditManager';
 
 // Responsive wrapper — full width on mobile, constrained on larger screens
 const wrapCls = "w-full flex flex-col items-center mx-auto px-3 sm:px-5 py-3 sm:py-5 max-w-full sm:max-w-[640px] md:max-w-[800px] lg:max-w-[920px]";
@@ -38,6 +39,18 @@ const Assessment = ({ session }) => {
 
   const handleBeginTargeting = async () => {
     if (!targetRoleInput.trim()) return;
+
+    const { ok: creditOk } = await (async () => {
+      const userCredits = session?.user?.user_metadata?.credits ?? 1000;
+      if (userCredits < 50) {
+        setFetchDiagnostic("Insufficient credits (50 required). Please purchase more credits to continue.");
+        setStatus('missing_data');
+        return { ok: false };
+      }
+      return { ok: true };
+    })();
+    if (!creditOk) return;
+
     const roleName = targetRoleInput.trim();
     setSelectedRole(roleName);
     setStatus('generating_ai');
@@ -48,6 +61,19 @@ const Assessment = ({ session }) => {
         setStatus('missing_data');
         return;
       }
+
+      // Deduct 50 credits and log transaction
+      const { ok, error: creditError } = await deductCredits(
+        session,
+        50,
+        `Assessment generated for "${roleName}"`
+      );
+      if (!ok) {
+        setFetchDiagnostic(creditError);
+        setStatus('missing_data');
+        return;
+      }
+
       const sessionId = genResult.sessionId;
       const { data: qLinks, error: linkError } = await supabase
         .from('session_questions')
@@ -248,14 +274,25 @@ const Assessment = ({ session }) => {
                 ? "AI strict 15-requests-per-minute limit! Please wait exactly 60 seconds before generating a new assessment."
                 : fetchDiagnostic.includes('AI Engine failed')
                   ? "The AI was unable to safely process your request. Check your API key or prompt complexity."
+                  : fetchDiagnostic.includes('Insufficient credits')
+                    ? "You do not have enough credits to start this assessment."
                   : "The AI succeeded but your database rejected the save. Disable RLS on your custom tables."}
             </p>
-            <button
-              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-[14px] transition-colors"
-              onClick={() => setStatus('role_select')}
-            >
-              <ChevronLeft size={16} /> Retry
-            </button>
+            {fetchDiagnostic.includes('Insufficient credits') ? (
+              <button
+                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-[14px] transition-colors"
+                onClick={() => navigate('/pricing')}
+              >
+                Buy Options <ChevronRight size={16} />
+              </button>
+            ) : (
+              <button
+                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-semibold text-[14px] transition-colors"
+                onClick={() => setStatus('role_select')}
+              >
+                <ChevronLeft size={16} /> Retry
+              </button>
+            )}
           </div>
         </div>
       </AppShell>

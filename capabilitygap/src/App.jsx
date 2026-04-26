@@ -7,6 +7,7 @@ import Home from './Pages/Home'
 import About from './Pages/About'
 import Process from './Pages/Process'
 import Pricing from './Pages/Pricing'
+import PricingPage from './Pages/PricingPage'
 import Contact from './Pages/Contact'
 import Login from './Pages/Login'
 import Signup from './Pages/Signup'
@@ -15,6 +16,7 @@ import Assessment from './Pages/Assessment'
 import Roadmap from './Pages/Roadmap'
 import ResumeAnalysis from './Pages/ResumeAnalysis'
 import Profile from './Pages/Profile'
+import CreditHistory from './Pages/CreditHistory'
 import './App.css'
 
 function App() {
@@ -35,7 +37,7 @@ function App() {
     return () => subscription.unsubscribe()
   }, [])
 
-  const hideNavbar = ['/login', '/signup', '/dashboard', '/assessment', '/roadmap', '/resume-analysis', '/profile'].includes(location.pathname)
+  const hideNavbar = ['/login', '/signup', '/dashboard', '/assessment', '/roadmap', '/resume-analysis', '/profile', '/credit-history', '/buy-credits'].includes(location.pathname)
 
   return (
     <>
@@ -44,7 +46,11 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/process" element={<Process />} />
-        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/pricing" element={<PricingPage session={session} />} />
+        <Route
+          path="/buy-credits"
+          element={session ? <Pricing session={session} /> : <Navigate to="/login" />}
+        />
         <Route path="/contact" element={<Contact />} />
         <Route
           path="/login"
@@ -73,6 +79,10 @@ function App() {
         <Route
           path="/profile"
           element={session ? <Profile session={session} /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/credit-history"
+          element={session ? <CreditHistory session={session} /> : <Navigate to="/login" />}
         />
       </Routes>
       {!hideNavbar && <Footer />}

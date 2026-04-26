@@ -21,6 +21,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjsLi
 
 import { analyzeResumeAndGenerateRoadmap } from '../utils/resumeAnalyzer';
 import Sidebar from '../Components/Sidebar';
+import { deductCredits } from '../utils/creditManager';
 import {
   UploadCloud, FileText, CheckCircle2, AlertTriangle, AlertCircle, Sparkles, ChevronRight, Activity, Zap
 } from 'lucide-react';
@@ -80,6 +81,13 @@ export default function ResumeAnalysis({ session }) {
   const handleAnalyze = async () => {
     if (!targetRole.trim() || !selectedFile) return;
 
+    const userCredits = session?.user?.user_metadata?.credits ?? 1000;
+    if (userCredits < 100) {
+      setErrorDiagnostic("Insufficient credits (100 required). Please purchase more credits to continue.");
+      setStatus('error');
+      return;
+    }
+
     setStatus('processing');
     try {
       // 1. Parse Native Web PDF
@@ -95,6 +103,9 @@ export default function ResumeAnalysis({ session }) {
       if (!result.success) {
         throw new Error(result.error);
       }
+
+      // Deduct 100 credits and log transaction
+      await deductCredits(session, 100, `Resume analysis for "${targetRole}"`);
 
       setAnalysisData(result);
       setStatus('results');
@@ -199,12 +210,21 @@ export default function ResumeAnalysis({ session }) {
           <div className="w-full bg-rose-50 border border-rose-200 text-rose-700 p-4 rounded-xl text-left text-sm font-mono mb-8 wrap-break-word">
             {errorDiagnostic}
           </div>
-          <button
-            onClick={() => setStatus('upload')}
-            className="px-6 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800"
-          >
-            Try Again
-          </button>
+          {errorDiagnostic.includes('Insufficient credits') ? (
+            <button
+              onClick={() => navigate('/pricing')}
+              className="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 flex items-center justify-center gap-2"
+            >
+              Buy Options <ChevronRight size={18} />
+            </button>
+          ) : (
+            <button
+              onClick={() => setStatus('upload')}
+              className="px-6 py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800"
+            >
+              Try Again
+            </button>
+          )}
         </div>
       </AppShell>
     );

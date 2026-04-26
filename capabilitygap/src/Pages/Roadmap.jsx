@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { useNavigate } from 'react-router-dom';
-import { 
-    Search, Bell, User, LogOut, 
-    LayoutDashboard, CheckSquare, Target, 
+import {
+    Bell, User, LogOut,
+    LayoutDashboard, CheckSquare, Target,
     MapPin, BarChart3, ChevronRight, CheckCircle2, Circle, Trees
 } from 'lucide-react';
+
 import Sidebar from '../Components/Sidebar';
 
 export default function Roadmap({ session }) {
@@ -34,12 +35,12 @@ export default function Roadmap({ session }) {
 
                 const { data: allSkills } = await supabase.from('skills').select('id, skill_name');
                 const gapData = rawGapData || [];
-                
+
                 if (allSkills?.length > 0) {
-                   gapData.forEach(g => {
-                       const match = allSkills.find(s => s.id === g.skill_id);
-                       if (match) g.skills = { name: match.skill_name };
-                   });
+                    gapData.forEach(g => {
+                        const match = allSkills.find(s => s.id === g.skill_id);
+                        if (match) g.skills = { name: match.skill_name };
+                    });
                 }
 
                 const { data: allRecs } = await supabase
@@ -48,7 +49,7 @@ export default function Roadmap({ session }) {
                     .eq('user_id', session.user.id)
                     .order('id', { ascending: false })
                     .limit(1);
-                
+
                 const recData = allRecs?.length > 0 ? allRecs[0] : null;
 
                 // Dynamically generate a 4-week roadmap
@@ -61,34 +62,34 @@ export default function Roadmap({ session }) {
                     let severityStr = 'Refinement';
                     if (focusGap?.gap_score > 40) severityStr = 'Intensive Focus';
                     else if (focusGap?.gap_score > 15) severityStr = 'Moderate Focus';
-                    
+
                     const coreRecText = aiPlan.topics ? `Study Recommended Topic: ${aiPlan.topics.substring(0, 100)}...` : `Review fundamental formulas and architectures for ${focusGap?.skills?.name || 'this module'}`;
 
                     newWeeks.push({
-                        id: `week-${i+1}`,
-                        title: `Week ${i+1}: ${focusGap ? focusGap.skills.name : 'General Mastery'}`,
+                        id: `week-${i + 1}`,
+                        title: `Week ${i + 1}: ${focusGap ? focusGap.skills.name : 'General Mastery'}`,
                         severity: focusGap ? severityStr : 'Mastery',
                         gap: focusGap?.gap_score || 0,
                         tasks: focusGap ? [
-                           { id: `t-${i}-1`, text: coreRecText, completed: false },
-                           { id: `t-${i}-2`, text: `Complete 10 dynamic practice problems strictly eliminating your ${focusGap.gap_score}% capability deficit`, completed: false },
-                           { id: `t-${i}-3`, text: `Take a targeted milestone quiz to lock in ${focusGap.skills.name} retention thresholds`, completed: false }
+                            { id: `t-${i}-1`, text: coreRecText, completed: false },
+                            { id: `t-${i}-2`, text: `Complete 10 dynamic practice problems strictly eliminating your ${focusGap.gap_score}% capability deficit`, completed: false },
+                            { id: `t-${i}-3`, text: `Take a targeted milestone quiz to lock in ${focusGap.skills.name} retention thresholds`, completed: false }
                         ] : [
-                           { id: `t-${i}-1`, text: 'Explore advanced algorithms application beyond requirement baselines', completed: false },
-                           { id: `t-${i}-2`, text: 'Participate in a weekly mock interview', completed: false }
+                            { id: `t-${i}-1`, text: 'Explore advanced algorithms application beyond requirement baselines', completed: false },
+                            { id: `t-${i}-2`, text: 'Participate in a weekly mock interview', completed: false }
                         ]
                     });
                 }
-                
+
                 // Initialize local progress tracking state
                 const savedProgress = localStorage.getItem(`roadmap_prog_${session.user.id}`);
                 if (savedProgress) {
-                   const parsed = JSON.parse(savedProgress);
-                   newWeeks.forEach(w => {
-                       w.tasks.forEach(t => {
-                           if (parsed[t.id]) t.completed = true;
-                       });
-                   });
+                    const parsed = JSON.parse(savedProgress);
+                    newWeeks.forEach(w => {
+                        w.tasks.forEach(t => {
+                            if (parsed[t.id]) t.completed = true;
+                        });
+                    });
                 }
 
                 setWeeks(newWeeks);
@@ -106,7 +107,7 @@ export default function Roadmap({ session }) {
     const updateOverallProgress = (weeklyData) => {
         let total = 0; let done = 0;
         weeklyData.forEach(w => {
-            w.tasks.forEach(t => { total++; if(t.completed) done++; });
+            w.tasks.forEach(t => { total++; if (t.completed) done++; });
         });
         setProgress(total === 0 ? 0 : Math.round((done / total) * 100));
     };
@@ -116,7 +117,7 @@ export default function Roadmap({ session }) {
         const week = nextWeeks.find(w => w.id === weekId);
         const task = week.tasks.find(t => t.id === taskId);
         task.completed = !task.completed;
-        
+
         setWeeks(nextWeeks);
         updateOverallProgress(nextWeeks);
 
@@ -138,16 +139,10 @@ export default function Roadmap({ session }) {
             {/* ---------------- MAIN CONTENT ---------------- */}
             <main className="flex-1 flex flex-col h-screen overflow-hidden">
                 {/* ---------------- HEADER ---------------- */}
-                <header className="h-20 bg-[#F8FAFC] hidden md:flex items-center justify-between px-8 border-b border-transparent shrink-0">
-                    <div className="relative w-full max-w-md hidden md:block">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <Search size={18} className="text-slate-400" />
-                        </div>
-                        <input
-                            type="text"
-                            placeholder="Search modules..."
-                            className="w-full bg-white pl-11 pr-4 py-2.5 rounded-full border border-slate-200/60 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 text-sm font-medium placeholder-slate-400 shadow-sm"
-                        />
+                <header className="h-20 bg-white border-b border-slate-100 hidden md:flex items-center justify-between px-8 shrink-0">
+                    <div className="flex flex-col">
+                        <h2 className="text-lg font-black text-slate-900 leading-none">Welcome, {name}!</h2>
+                        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Intelligence Roadmap</p>
                     </div>
                     <div className="flex items-center gap-6 ml-auto mt-4 md:mt-0">
                         <button className="text-slate-400 hover:text-slate-600 transition-colors relative">
@@ -156,9 +151,9 @@ export default function Roadmap({ session }) {
                         </button>
                         <div className="flex items-center gap-3 pl-4 border-l border-slate-200">
                             {user.user_metadata?.avatar_url ? (
-                                <img 
-                                    src={user.user_metadata.avatar_url} 
-                                    alt="UserAvatar" 
+                                <img
+                                    src={user.user_metadata.avatar_url}
+                                    alt="UserAvatar"
                                     className="w-9 h-9 rounded-full border-2 border-white shadow-sm object-cover"
                                 />
                             ) : (
@@ -190,7 +185,7 @@ export default function Roadmap({ session }) {
                             <div className="bg-linear-to-br from-indigo-900 to-slate-900 rounded-[2.5rem] p-8 md:p-12 mb-10 shadow-xl shadow-indigo-900/10 relative overflow-hidden text-white">
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/20 blur-[80px] rounded-full"></div>
                                 <div className="absolute bottom-0 left-10 w-48 h-48 bg-purple-500/20 blur-[60px] rounded-full"></div>
-                                
+
                                 <div className="relative z-10">
                                     <div className="inline-block bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold tracking-widest uppercase mb-4 text-indigo-200 border border-white/10">
                                         Personalized Blueprint
@@ -199,7 +194,7 @@ export default function Roadmap({ session }) {
                                     <p className="text-lg text-indigo-100 max-w-xl mb-8 leading-relaxed opacity-90">
                                         This timeline has been dynamically generated to permanently close your highest capability gaps evaluated during your last baseline test.
                                     </p>
-                                    
+
                                     {/* Master Progress Bar */}
                                     <div>
                                         <div className="flex justify-between items-end mb-2">
@@ -207,7 +202,7 @@ export default function Roadmap({ session }) {
                                             <span className="text-2xl font-bold text-white">{progress}%</span>
                                         </div>
                                         <div className="w-full h-3 bg-white/10 backdrop-blur-md rounded-full overflow-hidden border border-white/5">
-                                            <div 
+                                            <div
                                                 className="h-full bg-linear-to-r from-[#00f2fe] to-[#4facfe] rounded-full transition-all duration-1000 ease-out relative"
                                                 style={{ width: `${progress}%` }}
                                             >
@@ -228,20 +223,19 @@ export default function Roadmap({ session }) {
                                                     {week.title}
                                                 </h3>
                                                 <div className="flex items-center gap-3">
-                                                    <span className={`text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full ${
-                                                        week.severity === 'Intensive Focus' ? 'bg-rose-50 text-rose-500' :
-                                                        week.severity === 'Moderate Focus' ? 'bg-amber-50 text-amber-500' :
-                                                        'bg-indigo-50 text-indigo-500'
-                                                    }`}>
+                                                    <span className={`text-xs font-bold tracking-wider uppercase px-3 py-1 rounded-full ${week.severity === 'Intensive Focus' ? 'bg-rose-50 text-rose-500' :
+                                                            week.severity === 'Moderate Focus' ? 'bg-amber-50 text-amber-500' :
+                                                                'bg-indigo-50 text-indigo-500'
+                                                        }`}>
                                                         {week.severity}
                                                     </span>
                                                     {week.gap > 0 && <span className="text-sm font-medium text-slate-400">Bridging {week.gap}% Gap</span>}
                                                 </div>
                                             </div>
-                                            
+
                                             {/* Progress Circular Dial for Week */}
                                             {(() => {
-                                                const cw = week.tasks.filter(t=>t.completed).length;
+                                                const cw = week.tasks.filter(t => t.completed).length;
                                                 const tw = week.tasks.length;
                                                 const pct = tw === 0 ? 0 : (cw / tw) * 100;
                                                 const cRad = 16; const cCirc = cRad * Math.PI * 2;
@@ -254,8 +248,8 @@ export default function Roadmap({ session }) {
                                                         <div className="relative w-12 h-12 flex items-center justify-center">
                                                             <svg className="transform -rotate-90 w-12 h-12">
                                                                 <circle cx="24" cy="24" r={cRad} stroke="#F1F5F9" strokeWidth="4" fill="none" />
-                                                                <circle cx="24" cy="24" r={cRad} stroke={pct === 100 ? "#10B981" : "#4F46E5"} strokeWidth="4" fill="none" 
-                                                                    strokeDasharray={cCirc} strokeDashoffset={cCirc - (pct/100)*cCirc} className="transition-all duration-500" />
+                                                                <circle cx="24" cy="24" r={cRad} stroke={pct === 100 ? "#10B981" : "#4F46E5"} strokeWidth="4" fill="none"
+                                                                    strokeDasharray={cCirc} strokeDashoffset={cCirc - (pct / 100) * cCirc} className="transition-all duration-500" />
                                                             </svg>
                                                             {pct === 100 && <CheckCircle2 size={14} className="absolute text-emerald-500 bg-white rounded-full" />}
                                                         </div>
@@ -267,14 +261,13 @@ export default function Roadmap({ session }) {
                                         {/* Task Checkboxes */}
                                         <div className="space-y-3">
                                             {week.tasks.map(task => (
-                                                <div 
-                                                    key={task.id} 
+                                                <div
+                                                    key={task.id}
                                                     onClick={() => toggleTask(week.id, task.id)}
-                                                    className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${
-                                                        task.completed 
-                                                            ? 'bg-slate-50 border-slate-100 opacity-60' 
+                                                    className={`flex items-start gap-4 p-4 rounded-2xl border transition-all cursor-pointer ${task.completed
+                                                            ? 'bg-slate-50 border-slate-100 opacity-60'
                                                             : 'bg-white border-slate-200/60 hover:border-indigo-200 hover:shadow-sm shadow-indigo-100/20'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <div className="mt-0.5 shrink-0">
                                                         {task.completed ? (
@@ -283,9 +276,8 @@ export default function Roadmap({ session }) {
                                                             <Circle size={24} className="text-slate-300" />
                                                         )}
                                                     </div>
-                                                    <p className={`text-[15px] font-medium leading-relaxed transition-all ${
-                                                        task.completed ? 'text-slate-500 line-through' : 'text-slate-700'
-                                                    }`}>
+                                                    <p className={`text-[15px] font-medium leading-relaxed transition-all ${task.completed ? 'text-slate-500 line-through' : 'text-slate-700'
+                                                        }`}>
                                                         {task.text}
                                                     </p>
                                                 </div>
@@ -294,7 +286,7 @@ export default function Roadmap({ session }) {
                                     </div>
                                 ))}
                             </div>
-                            
+
                             <div className="mt-12 text-center pb-8">
                                 <p className="text-slate-400 text-sm">Once you clear 100% of your roadmap tasks, we critically recommend re-running the diagnostic assessment.</p>
                                 <button onClick={() => navigate('/assessment')} className="mt-4 px-6 py-2 bg-slate-100 hover:bg-slate-200 font-bold text-slate-600 rounded-full transition-colors text-sm">

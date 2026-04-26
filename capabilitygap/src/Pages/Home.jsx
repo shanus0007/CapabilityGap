@@ -1,6 +1,7 @@
 import Hero from '../Components/Hero'
 import ResumeAnalysisSection from '../Components/ResumeAnalysisSection'
 import Process from './Process'
+import PricingSection from '../Components/PricingSection'
 
 const Home = () => {
     return (
@@ -8,7 +9,7 @@ const Home = () => {
             <Hero />
             <Process />
             <ResumeAnalysisSection />
-
+            <PricingSection />
         </>
     )
 }

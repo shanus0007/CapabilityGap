@@ -25,6 +25,7 @@ const Signup = () => {
             options: {
                 data: {
                     full_name: name,
+                    credits: 1000,
                 },
             },
         })
