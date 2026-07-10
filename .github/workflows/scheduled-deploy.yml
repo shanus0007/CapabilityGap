@@ -1,0 +1,34 @@
+name: Scheduled Vercel Deploy
+
+on:
+  schedule:
+    # Runs every 5 days at 00:00 UTC (midnight)
+    # Cron syntax: minute hour day-of-month month day-of-week
+    # "every 5 days" = on day 1, 6, 11, 16, 21, 26, 31 of each month
+    - cron: '0 0 1,6,11,16,21,26 * *'
+
+  # Allow manual trigger from GitHub Actions UI
+  workflow_dispatch:
+
+jobs:
+  trigger-vercel-deploy:
+    name: Trigger Vercel Redeploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Vercel Deploy Hook
+        run: |
+          echo "🚀 Triggering scheduled Vercel deployment..."
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "${{ secrets.VERCEL_DEPLOY_HOOK_URL }}")
+          
+          if [ "$RESPONSE" -eq 201 ]; then
+            echo "✅ Deployment triggered successfully! (HTTP $RESPONSE)"
+          else
+            echo "❌ Unexpected response: HTTP $RESPONSE"
+            exit 1
+          fi
+
+      - name: Log deployment time
+        run: |
+          echo "📅 Deployment triggered at: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
